@@ -1,5 +1,7 @@
 # Scaling TruffleHog checks
 
+**Terms used here:** A digest is a file or container fingerprint used to confirm the exact version. An artifact is a file produced for a release, such as an application ZIP or container image.
+
 Measure scan duration, queue time, inventory size, package/history/module coverage, finding churn and remediation age. Optimize only after proving which work consumes time.
 
 | Growth issue | Potential improvement | Preserve |

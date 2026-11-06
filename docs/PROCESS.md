@@ -1,12 +1,12 @@
 # Scope, trust and integration
 
-1. Select the exact target: source commit/lockfiles, selected image or bounded Git history as appropriate.
-2. Run trusted scanner tooling and policy outside candidate-controlled execution. Validate the pinned executable/image/version.
-3. Keep credentials and unrelated private work outside staged inputs. Scan completion must be explicit.
-4. Validate the report shape, inventory/coverage and scanner status before interpreting findings.
-5. Apply the actual mode's policy: record advisory findings or enforce an explicitly selected threshold. Never confuse execution failure with an ordinary findings exit code.
-6. Repair/retest, preserve remaining issues and bind the result to the selected target.
+1. Identify exactly what will be checked: a source-code version and its package list, a container build, or a defined part of Git history.
+2. Run the trusted scanner and rules separately from the proposed code changes. Confirm the scanner’s exact version and file or image fingerprint.
+3. Leave credentials and unrelated private files out of the scan input. Require a clear result showing that the scan finished.
+4. Before reviewing findings, check that the report is readable, the expected files or packages were checked, and the scanner finished correctly.
+5. Apply the actual mode's policy: record findings for review or enforce an explicitly selected threshold. Never confuse execution failure with an ordinary findings exit code.
+6. Apply and test suitable fixes, keep unresolved issues visible, and record exactly which version the result describes.
 
-The actual platform integration is included as [an inert example](../reference/workflows/trufflehog-pr.yml.example). It references the complete platform tooling/paths and is not a drop-in deployment workflow for this smaller repository. Its automatic triggers do not run because it is outside .github/workflows. The new public validation workflow runs contracts only and requires manual dispatch; it was not dispatched here.
+The real platform’s workflow is included as [an inert example](../reference/workflows/trufflehog-pr.yml.example). It references the complete platform tooling/paths and is not a drop-in deployment workflow for this smaller repository. Its automatic triggers do not run because it is outside .github/workflows. The public test workflow checks the input/output rules and runs only when started manually. It was not run on GitHub for this update.
 
-No Azure login, new cloud role or Terraform apply is necessary for these local checks. Scanning permission and deployment permission should remain separate. GitHub policy entitlement, branch enforcement and approved release identity need their own verification; a YAML file alone does not prove repository-wide admission.
+No Azure login, new cloud role or Terraform apply is necessary for these local checks. Scanning permission and deployment permission should remain separate. Check separately that the GitHub plan supports the required rules, that those rules are enforced, and that the correct identity approves a release. A workflow file alone does not prove that every release path is protected.

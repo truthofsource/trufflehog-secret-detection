@@ -14,7 +14,7 @@ The public wrapper's allowed origin is changed to this project; it must not be b
 | Category | Meaning |
 | --- | --- |
 | Dated platform finding record | Actual recorded source-review/scanning history, with its date and limits |
-| Local scanner execution | Genuine run against only the public fixtures, where recorded in Validation |
+| Local scanner execution | Genuine run against only the public test examples, where recorded in Validation |
 | Parser/gate demonstration | Fictional data exercising the actual decision code |
 | Cloud/runtime acceptance | Separate target-specific evidence, not performed for this portfolio |
 

@@ -1,6 +1,6 @@
 # TruffleHog Secret Detection and Git History Protection
 
-**Deleting a credential from the latest file does not remove it from Git history.**
+**Find possible leaked credentials, including ones deleted from the latest files.**
 
 [Business problem](#the-business-problem) · [Strengths](#where-trufflehog-is-strong) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md)
 
@@ -8,21 +8,21 @@
 
 ## The Business Problem
 
-A platform repository needed protection against accidentally committed credentials, including values removed in later commits. Scanner output itself could expose candidate secrets, and running PR-supplied tooling or provider verification would create another trust boundary.
+Passwords, keys or tokens can remain in Git history after a file is edited or deleted. A secret scanner’s own output may also reveal the value it found. Proposed code changes must not be allowed to choose their own scanning rules.
 
 ## The Solution
 
-Run a digest-pinned scanner against exact complete Git history or a bounded PR range, using trusted-base tooling and a read-only network-disabled scanner container. Validate completion and coverage, then publish only safe aggregate counts.
+Use a fixed version of TruffleHog to inspect the selected Git history or proposed change. Run trusted scanning code with read-only access and no network inside the scanning container. Check that coverage is complete and publish counts rather than possible secret values.
 
-**Business outcome:** The implementation catches removed history, refuses incomplete coverage and keeps raw candidate fields private. A recorded reconciliation reviewed three detector candidates and confirmed they were public package hashes; it did not create broad secret suppressions.
+**Business outcome:** The process checks deleted history and keeps possible secrets private. A recorded review confirmed that three candidates were public package hashes, without adding broad rules that hide future findings.
 
 ## Where TruffleHog Is Strong
 
 | Strength | Practical value |
 | --- | --- |
-| **Deleted-history coverage** | Git scanning can find candidate credentials in reachable commits even when the current file has been removed. |
+| **Deleted-history coverage** | Git scanning can find possible credentials in reachable commits even when the current file has been removed. |
 | **Credential-focused detectors** | Purpose-built detectors identify credential formats. Provider verification is an optional tool capability; this implementation disables it and treats matches as candidates. |
-| **Safer PR trust boundary** | Trusted scripts/policy, exact base/head coverage and aggregate-only receipts prevent a candidate change from selecting its own scanner decision or leaking raw output. |
+| **Safer PR trust boundary** | Trusted scripts/policy, exact base/head coverage and reports containing summary counts only prevent a candidate change from selecting its own scanner decision or leaking raw output. |
 
 These strengths describe what this tool contributes to the platform's layered checks. It complements the other scanners; it is not a complete application-security assessment. [Strengths, limits and tradeoffs](docs/STRENGTHS-AND-TRADEOFFS.md).
 
@@ -46,7 +46,7 @@ The exact target and output protections differ by scanner. TruffleHog 3.99.4 is 
 | Component | Purpose | Implementation |
 | --- | --- | --- |
 | Actual scanner wrapper | Preserve the real target/trust/output boundary | [Source](scripts/trufflehog_scan.py) |
-| Original regression tests | Reject incomplete/malformed evidence and unsafe scope assumptions | [Tests](scripts/) |
+| Original tests that existing behavior still works | Reject incomplete/incorrectly structured evidence and unsafe scope assumptions | [Tests](scripts/) |
 | Pinned scanner configuration | Make selected tooling and policy explicit | [Configuration](security/) |
 | Actual integration reference | Explain the production CI design without activating it here | [Inert workflow](reference/workflows/trufflehog-pr.yml.example) |
 | Platform findings | Preserve dated fixes and remaining work | [Recorded findings](data/platform-findings.json) |
@@ -61,7 +61,7 @@ python -B -m unittest discover -s scripts -p 'test_*.py' -v
 python -B scripts/demo.py
 ```
 
-**Look for:** 21 passing original contract cases; two optional integration cases are separately recorded. The fixture demonstration is labeled and does not pretend to be a current full-platform scan. [Dated validation](docs/VALIDATION.md) records exact executed/skipped cases.
+**Look for:** 21 passing original contract cases; two optional integration cases are separately recorded. The demonstration using test data is labeled and does not pretend to be a current full-platform scan. [Dated validation](docs/VALIDATION.md) records exact executed/skipped cases.
 
 ### 2. Inspect genuine scanner evidence separately
 
@@ -69,11 +69,11 @@ The parser demonstration accepts a fictional candidate and emits only counts. A 
 
 ![Example and evidence boundary](docs/images/02-example.png)
 
-Local scans cover only this public reference. Dated platform reports are retained as history; local fixture output does not replace or clear the full platform finding register. No cloud credentials, resource changes or provider credential verification are needed.
+Local scans cover only this public reference. Dated platform reports are retained as history; local test-example output does not replace or clear the full platform finding register. No cloud credentials, resource changes or provider credential verification are needed.
 
 ### 3. Follow findings through to a defensible decision
 
-Keep the target, version, database/policy context and completion evidence. Review the actual finding, apply a compatible fix where justified, repeat the relevant checks and preserve unresolved items. A scanner timeout, malformed report or missing inventory cannot become a successful scan with zero findings.
+Keep the target, version, database/policy context and completion evidence. Review the actual finding, apply a compatible fix where justified, repeat the relevant checks and preserve unresolved items. A scanner timeout, incorrectly structured report or missing inventory cannot become a successful scan with zero findings.
 
 ### Privacy and history coverage
 
@@ -108,7 +108,7 @@ The reference workflow is manual-only. Actual platform integration examples are 
 | [Process and integration](docs/PROCESS.md) | Scope, trust, completion and CI decisions |
 | [Findings and fixes](docs/FINDINGS-AND-FIXES.md) | Recorded results versus local examples |
 | [Commands](docs/COMMANDS.md) | Reproducible local checks and scanner invocation |
-| [Operations](docs/OPERATIONS.md) | Failure handling, privacy and triage |
+| [Operations](docs/OPERATIONS.md) | Failure handling, privacy and review and prioritization |
 | [Scaling](docs/SCALING.md) | Scope selection, caches, budgets and access |
 | [Source map](docs/SOURCE-MAP.md) | Actual source and explicit adaptations |
 | [Validation](docs/VALIDATION.md) | Observed local outcomes and limits |

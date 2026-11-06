@@ -1,8 +1,10 @@
 # Local validation — November 6, 2026
 
+**Terms used here:** A fixture is test data or a test setup used instead of real business records.
+
 | Check | Result |
 | --- | --- |
-| Original contract suite | 21 passed; 2 optional integration cases skipped in the default suite |
+| Original input/output rule tests | 21 passed; 2 optional integration cases skipped in the default suite |
 | Demo | Actual parser/decision code exercised with explicitly fictional inputs |
 | Browser | Three strength cards, all tabs and 390px layout passed |
 | Browser isolation | Zero external requests and zero page errors |

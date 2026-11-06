@@ -1,10 +1,12 @@
 # TruffleHog: strengths and tradeoffs
 
+**Terms used here:** An artifact is a file produced for a release, such as an application ZIP or container image.
+
 | Strength | Why it is useful in this implementation |
 | --- | --- |
-| **Deleted-history coverage** | Git scanning can find candidate credentials in reachable commits even when the current file has been removed. |
+| **Deleted-history coverage** | Git scanning can find possible credentials in reachable commits even when the current file has been removed. |
 | **Credential-focused detectors** | Purpose-built detectors identify credential formats. Provider verification is an optional tool capability; this implementation disables it and treats matches as candidates. |
-| **Safer PR trust boundary** | Trusted scripts/policy, exact base/head coverage and aggregate-only receipts prevent a candidate change from selecting its own scanner decision or leaking raw output. |
+| **Safer PR trust boundary** | Trusted scripts/policy, exact base/head coverage and reports containing summary counts only prevent a candidate change from selecting its own scanner decision or leaking raw output. |
 
 | Limit | Practical response |
 | --- | --- |

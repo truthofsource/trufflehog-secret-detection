@@ -4,13 +4,13 @@
 
 | Strength | Why it is useful in this implementation |
 | --- | --- |
-| **Deleted-history coverage** | Git scanning can find possible credentials in reachable commits even when the current file has been removed. |
-| **Credential-focused detectors** | Purpose-built detectors identify credential formats. Provider verification is an optional tool capability; this implementation disables it and treats matches as candidates. |
-| **Safer PR trust boundary** | Trusted scripts/policy, exact base/head coverage and reports containing summary counts only prevent a candidate change from selecting its own scanner decision or leaking raw output. |
+| **Deleted-history coverage** | Search earlier Git versions for possible credentials, even after a file is deleted. |
+| **Credential-focused detectors** | Look for patterns used by passwords, keys and tokens. The tool can optionally check whether a credential works; this setup disables that step and reviews matches privately. |
+| **Safer PR trust boundary** | Use scanning code from the trusted base version, check the exact proposed change and publish counts only. The proposed code cannot choose its own rules or expose possible secret values. |
 
 | Limit | Practical response |
 | --- | --- |
-| A candidate needs review | A detector match is not proof of a live credential; a public package hash can require independent classification. |
+| A candidate needs review | A match does not prove that a working credential was exposed. Some matches, such as public package hashes, need review before a decision. |
 | Scope is explicit | A main-history or PR-range scan is not every branch, ref, artifact, image or external mailbox. |
 | Offline means no live validity test | Network none and no-verification reduce exposure, but cannot establish whether a candidate works against a provider. |
 

@@ -20,11 +20,11 @@ Use a fixed version of TruffleHog to inspect the selected Git history or propose
 
 | Strength | Practical value |
 | --- | --- |
-| **Deleted-history coverage** | Git scanning can find possible credentials in reachable commits even when the current file has been removed. |
-| **Credential-focused detectors** | Purpose-built detectors identify credential formats. Provider verification is an optional tool capability; this implementation disables it and treats matches as candidates. |
-| **Safer PR trust boundary** | Trusted scripts/policy, exact base/head coverage and reports containing summary counts only prevent a candidate change from selecting its own scanner decision or leaking raw output. |
+| **Deleted-history coverage** | Search earlier Git versions for possible credentials, even after a file is deleted. |
+| **Credential-focused detectors** | Look for patterns used by passwords, keys and tokens. The tool can optionally check whether a credential works; this setup disables that step and reviews matches privately. |
+| **Safer PR trust boundary** | Use scanning code from the trusted base version, check the exact proposed change and publish counts only. The proposed code cannot choose its own rules or expose possible secret values. |
 
-These strengths describe what this tool contributes to the platform's layered checks. It complements the other scanners; it is not a complete application-security assessment. [Strengths, limits and tradeoffs](docs/STRENGTHS-AND-TRADEOFFS.md).
+This tool covers one part of security. The other scanners check different areas, so the results need to be considered together. [Strengths, limits and tradeoffs](docs/STRENGTHS-AND-TRADEOFFS.md).
 
 ## Architecture
 
@@ -39,16 +39,16 @@ flowchart LR
   Decision --> Review[Review / repair / retest / preserve receipt]
 ```
 
-The exact target and output protections differ by scanner. TruffleHog 3.99.4 is the selected source pin, not a claim that it is the latest release. [Actual source map](docs/SOURCE-MAP.md).
+Each scanner checks a different kind of information and needs suitable protection for its reports. TruffleHog 3.99.4 is the selected source pin, not a claim that it is the latest release. [Actual source map](docs/SOURCE-MAP.md).
 
 ## What Was Built
 
 | Component | Purpose | Implementation |
 | --- | --- | --- |
-| Actual scanner wrapper | Preserve the real target/trust/output boundary | [Source](scripts/trufflehog_scan.py) |
-| Original tests that existing behavior still works | Reject incomplete/incorrectly structured evidence and unsafe scope assumptions | [Tests](scripts/) |
-| Pinned scanner configuration | Make selected tooling and policy explicit | [Configuration](security/) |
-| Actual integration reference | Explain the production CI design without activating it here | [Inert workflow](reference/workflows/trufflehog-pr.yml.example) |
+| Scan script | Check the intended files with trusted tools and protect the report | [Source](scripts/trufflehog_scan.py) |
+| Existing behavior tests | Reject missing or unreadable reports and checks of the wrong files | [Tests](scripts/) |
+| Fixed scanner version and settings | Record the tool version and the rules used | [Configuration](security/) |
+| Real pipeline example | Show how the real pipeline runs checks, without running it here | [Inert workflow](reference/workflows/trufflehog-pr.yml.example) |
 | Platform findings | Preserve dated fixes and remaining work | [Recorded findings](data/platform-findings.json) |
 | Offline example/viewer | Exercise actual parsing/decision code with fictional inputs | [Example](scripts/demo.py) |
 
@@ -94,7 +94,7 @@ Open [the local reference](http://127.0.0.1:8138). It shows strengths, actual pa
 
 | Boundary | What it means |
 | --- | --- |
-| A candidate needs review | A detector match is not proof of a live credential; a public package hash can require independent classification. |
+| A candidate needs review | A match does not prove that a working credential was exposed. Some matches, such as public package hashes, need review before a decision. |
 | Scope is explicit | A main-history or PR-range scan is not every branch, ref, artifact, image or external mailbox. |
 | Offline means no live validity test | Network none and no-verification reduce exposure, but cannot establish whether a candidate works against a provider. |
 
@@ -107,10 +107,10 @@ The reference workflow is manual-only. Actual platform integration examples are 
 | [Strengths and tradeoffs](docs/STRENGTHS-AND-TRADEOFFS.md) | Why this scanner, where it helps and where it stops |
 | [Process and integration](docs/PROCESS.md) | Scope, trust, completion and CI decisions |
 | [Findings and fixes](docs/FINDINGS-AND-FIXES.md) | Recorded results versus local examples |
-| [Commands](docs/COMMANDS.md) | Reproducible local checks and scanner invocation |
-| [Operations](docs/OPERATIONS.md) | Failure handling, privacy and review and prioritization |
-| [Scaling](docs/SCALING.md) | Scope selection, caches, budgets and access |
-| [Source map](docs/SOURCE-MAP.md) | Actual source and explicit adaptations |
-| [Validation](docs/VALIDATION.md) | Observed local outcomes and limits |
+| [Commands](docs/COMMANDS.md) | Commands to repeat the local checks and start the scanner |
+| [Operations](docs/OPERATIONS.md) | Handle failures, protect private data and prioritize findings |
+| [Scaling](docs/SCALING.md) | Choose what to scan and manage time, cost and access |
+| [Source map](docs/SOURCE-MAP.md) | Where the code came from and what changed for this example |
+| [Validation](docs/VALIDATION.md) | Local test results and their limits |
 
 Related projects: [Trivy](https://github.com/truthofsource/trivy-vulnerability-management), [TruffleHog](https://github.com/truthofsource/trufflehog-secret-detection), [Checkov](https://github.com/truthofsource/checkov-azure-infrastructure-security), and [delivery/rollback](https://github.com/truthofsource/secure-container-delivery-and-rollback).

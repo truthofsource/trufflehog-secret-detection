@@ -1,5 +1,7 @@
 # TruffleHog Secret Detection and Git History Protection
 
+> This project is now part of **[Layered Security Testing for an Azure Platform](https://github.com/truthofsource/azure-devsecops-security-scanning)**, which combines Trivy, Checkov, TruffleHog and OWASP ZAP. This repository remains available for existing links and its original evidence.
+
 **Find possible leaked credentials, including ones deleted from the latest files.**
 
 [Business problem](#the-business-problem) · [Strengths](#where-trufflehog-is-strong) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md)

@@ -15,3 +15,9 @@ One separately executed pinned-container history test passed: an unregistered ge
 [Machine-readable results](validation-results.json) record exact scope. Historical November 5 platform findings are separate from November 6 public examples. Trivy's local vulnerability result used an existing database with updates disabled. Checkov's direct local scan used the existing selected Linux tooling with network none. The original Checkov wrapper is exercised by contracts; the fresh fixture scanner invocation was direct and its report was then validated by that wrapper's actual parser.
 
 No Terraform apply, Azure query/start, credential-provider verification, release, package repair in the private platform or hosted Actions run occurred. Pure tests are not proof of deployed image freshness, full-history coverage outside the selected source, or live cloud compliance.
+
+## Troubleshooting documentation review — November 7, 2026
+
+Added a README incident summary and a linked historical lessons guide, checking the account against the maintained source records. Documentation checks covered local links, complete incident fields, identifying-information patterns, whitespace and preservation of the existing four-step walkthrough. Shared incidents link to the relevant project details; unresolved causes remain explicit.
+
+This was an editorial update. Application code, tests, Terraform, images, workflow definitions and cloud settings were not changed. Existing functional test counts and screenshots above retain their original scope and dates; no application suite, live scan, paid image request, recovery rehearsal or GitHub Actions run was executed for this documentation pass.

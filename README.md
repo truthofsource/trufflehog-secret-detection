@@ -114,6 +114,10 @@ Open [the local reference](http://127.0.0.1:8138). It shows strengths, actual pa
 
 The reference workflow is manual-only. Actual platform integration examples are inert files outside .github/workflows. No hosted CI run or deployment was performed to create this project. Do not execute candidate package scripts or expose raw secret candidates while adding security checks.
 
+## Troubleshooting Lessons
+
+Three detector candidates were public package hashes rather than credentials. The useful outcome was a narrow evidence-based classification, not a rule that future similar-looking values should be ignored. [Read the incident, evidence and verification](docs/LESSONS-LEARNED.md).
+
 ## Project Guides
 
 | Guide | Purpose |

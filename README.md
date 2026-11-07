@@ -4,7 +4,7 @@
 
 **Find possible leaked credentials, including ones deleted from the latest files.**
 
-[Business problem](#the-business-problem) · [Strengths](#where-trufflehog-is-strong) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md)
+[Business problem](#the-business-problem) · [Strengths](#where-trufflehog-is-strong) · [Proof](#proof-it-works) · [Commands](docs/COMMANDS.md) · [Step by step](#step-by-step)
 
 ![Local scanner reference](docs/images/01-strengths.png)
 
@@ -17,6 +17,18 @@ Passwords, keys or tokens can remain in Git history after a file is edited or de
 Use a fixed version of TruffleHog to inspect the selected Git history or proposed change. Run trusted scanning code with read-only access and no network inside the scanning container. Check that coverage is complete and publish counts rather than possible secret values.
 
 **Business outcome:** The process checks deleted history and keeps possible secrets private. A recorded review confirmed that three candidates were public package hashes, without adding broad rules that hide future findings.
+
+## Step by Step
+
+A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
+
+1. **Choose the code history** — Select the repository history or proposed change that needs checking. Confirm that the required history is present before starting.
+
+2. **Look for possible secrets** — TruffleHog examines the selected content for passwords, access keys and similar values. The scan uses trusted rules and does not publish the possible secret values.
+
+3. **Review matches privately** — Determine whether a candidate is a real secret or harmless content. This setup disables online checks of whether a possible credential works.
+
+4. **Repair and record the result** — Revoke or replace a real exposed secret before considering history cleanup. Keep the review outcome without adding broad exclusions that could hide future problems.
 
 ## Where TruffleHog Is Strong
 

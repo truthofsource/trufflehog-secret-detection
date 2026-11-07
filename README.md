@@ -18,13 +18,24 @@ Use a fixed version of TruffleHog to inspect the selected Git history or propose
 
 **Business outcome:** The process checks deleted history and keeps possible secrets private. A recorded review confirmed that three candidates were public package hashes, without adding broad rules that hide future findings.
 
+## Tools Used and What They Do
+
+| Tool or service | What it does | Where it fits |
+| --- | --- | --- |
+| TruffleHog | Look for possible secrets in the selected files and Git history. | Actual detector; a candidate is not automatically a confirmed exposed credential. |
+| Git | Provide the source history and exact refs under review. | History coverage must be checked, not assumed from the current working file. |
+| Docker | Provide a pinned scanner execution option in the operating instructions. | Optional scanner runtime, separate from the Python teaching model. |
+| Python and GitHub Actions | Test coverage/report handling with fictional candidates. | Public validation is local/manual-only and does not publish raw possible secrets. |
+
+This retained tool project remains linked from the combined security-scanning portfolio entry. Historical scanner results keep their original target, date and coverage limits.
+
 ## Step by Step
 
 A short walkthrough of the process, with technical instructions and evidence limits in the sections below.
 
-1. **Choose the code history** — Select the repository history or proposed change that needs checking. Confirm that the required history is present before starting.
+1. **Choose the code history (Git)** — Select the repository history or proposed change that needs checking. Confirm that the required history is present before starting.
 
-2. **Look for possible secrets** — TruffleHog examines the selected content for passwords, access keys and similar values. The scan uses trusted rules and does not publish the possible secret values.
+2. **Look for possible secrets (TruffleHog)** — TruffleHog examines the selected content for passwords, access keys and similar values. The scan uses trusted rules and does not publish the possible secret values.
 
 3. **Review matches privately** — Determine whether a candidate is a real secret or harmless content. This setup disables online checks of whether a possible credential works.
 

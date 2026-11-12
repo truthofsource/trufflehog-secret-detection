@@ -10,7 +10,11 @@
 
 ## The Business Problem
 
-Passwords, keys or tokens can remain in Git history after a file is edited or deleted. A secret scanner’s own output may also reveal the value it found. Proposed code changes must not be allowed to choose their own scanning rules.
+Engineers work with configuration, deployment scripts and integration code that may reference passwords, tokens or service keys. If a usable credential reaches Git history, deleting it from the newest file leaves older copies available. That can create an access problem even after the visible code looks corrected.
+
+Investigating scanner results brings its own work: some matches are harmless package hashes, while others require urgent review and credential replacement. Publishing the raw finding can expose the value again. Broad exclusions added to quiet false alarms can also hide a later genuine leak.
+
+The business need was to detect possible credential exposure across the relevant history, give reviewers enough context to act and keep both the suspected values and future scanning coverage protected.
 
 ## The Solution
 
